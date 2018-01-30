@@ -1,0 +1,41 @@
+import { GraphQLNonNull, GraphQLString } from 'graphql'
+import {
+  mutationWithClientMutationId,
+  cursorForObjectInConnection,
+  fromGlobalId,
+} from 'graphql-relay'
+
+import UserType from '../type/UserType'
+import { PageConnection } from '../type/PageType'
+
+export default mutationWithClientMutationId({
+  name: 'DeletePage',
+  inputFields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    
+  },
+  outputFields: {
+    pageEdge: {
+      type: PageConnection.edgeType,
+      resolve: async (newPage, args, { db }) => {
+        const pages = await db.getPages().then((allpages)=> {
+          return allpages;
+        });
+        const res = {};
+        res.cursor = cursorForObjectInConnection(pages, newPage);
+        res.node = newPage
+        return res
+    },
+    },
+    user: {
+      type: UserType,
+      resolve: (newPage, args, { db }, tokenData) =>
+        db.getUserById(tokenData.userId),
+    },
+  },
+  mutateAndGetPayload: (page, { db }, { rootValue: { tokenData } }) => {
+    return db.deletePage(fromGlobalId(page.id).id, tokenData)
+  }
+})

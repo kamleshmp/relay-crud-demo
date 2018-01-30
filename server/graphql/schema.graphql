@@ -1,0 +1,104 @@
+schema {
+  query: Root
+  mutation: Mutation
+}
+
+input CreatePageInput {
+  title: String!
+  slug: String!
+  linkText: String!
+  clientMutationId: String
+}
+
+input DeletePageInput {
+  id: String!
+}
+
+type CreatePagePayload {
+  pageEdge: PageEdge
+  user: User
+  clientMutationId: String
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+  clientMutationId: String
+}
+
+type LoginPayload {
+  user: User
+  clientMutationId: String
+}
+
+input LogoutInput {
+  clientMutationId: String
+}
+
+type LogoutPayload {
+  user: User
+  clientMutationId: String
+}
+
+type Mutation {
+  register(input: RegisterInput!): RegisterPayload
+  login(input: LoginInput!): LoginPayload
+  logout(input: LogoutInput!): LogoutPayload
+  createPage(input: CreatePageInput!): CreatePagePayload
+}
+
+
+input RegisterInput {
+  email: String!
+  password: String!
+  firstName: String!
+  lastName: String!
+  clientMutationId: String
+}
+
+type RegisterPayload {
+  user: User
+  clientMutationId: String
+}
+
+type Root {
+  viewer: Viewer
+}
+
+type Page {
+  # The ID of an object
+  id: ID!
+
+  title: String
+
+  title: String
+
+  linkText: String
+
+}
+
+type User {
+  # The ID of an object
+  id: ID!
+
+  # the users email address
+  email: String
+
+  # the users first name
+  firstName: String
+
+  # the users last name
+  lastName: String
+
+  # the users role
+  role: String
+  pages(after: String, first: Int, before: String, last: Int): PageConnection
+}
+
+type Viewer {
+  isLoggedIn: Boolean
+  canPublish: Boolean
+  user: User
+  pages(after: String, first: Int, before: String, last: Int): PageConnection
+  page(pageId: String): Page
+}

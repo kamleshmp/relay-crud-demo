@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "pg username",
+    "password": "pg password",
+    "database": "crud_app",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "pg username",
+    "password": "pg password",
+    "database": "crud_app",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
